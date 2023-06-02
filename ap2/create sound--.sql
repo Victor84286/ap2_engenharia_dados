@@ -165,3 +165,22 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO categoria (nome)
+VALUES ('Axé'),
+ ('Blues'),
+ ('Country'),
+ ('Eletrônica'),
+ ('Forró'),
+ ('Funk'),
+ ('Gospel'),
+ ('Hip Hop'),
+ ('Jazz'),
+ ('MPB'),
+ ('Música clássica'),
+ ('Pagode'),
+ ('Pop'),
+ ('Rap'),
+ ('Reggae'),
+ ('Rock'),
+ ('Samba')
