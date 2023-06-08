@@ -14,6 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema sound
 -- -----------------------------------------------------
+drop database if EXISTS sound;
 CREATE SCHEMA IF NOT EXISTS `sound` DEFAULT CHARACTER SET utf8 ;
 USE `sound` ;
 
@@ -31,12 +32,12 @@ ENGINE = InnoDB;
 -- Table `sound`.`Musica`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sound`.`Musica` (
-  `título` VARCHAR(45) NOT NULL,
-  `letra` VARCHAR(45) NOT NULL,
-  `data de lançamento` DATE NOT NULL,
-  `duração` INT NOT NULL,
+  `titulo` VARCHAR(45) NOT NULL,
+  `letra` VARCHAR(1000) NOT NULL,
+  `data_lancamento` DATE NOT NULL,
+  `duracao` INT NOT NULL,
   `censura` INT NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Categoria_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Musica_Categoria1`
@@ -52,7 +53,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sound`.`Autor` (
   `nome` VARCHAR(45) NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -75,7 +76,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `sound`.`Playlist` (
   `titulo` VARCHAR(45) NOT NULL,
   `visibilidade` TINYINT NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Categoria_id` INT NOT NULL,
   `Usuario_cpf` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -97,7 +98,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sound`.`Produtor` (
   `nome` VARCHAR(45) NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
