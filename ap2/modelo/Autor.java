@@ -35,6 +35,6 @@ public class Autor {
 
     @Override
     public String toString() {
-        return "{'autor':{'id': " + this.id + ", 'nome': '" + this.nome + "}}";
+        return "{'autor':{'id': " + this.id + ", 'nome': '" + this.nome + "}}\n";
     }
 }

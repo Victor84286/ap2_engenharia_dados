@@ -1,12 +1,16 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import modelo.Autor;
+import modelo.Categoria;
 import modelo.Musica;
 import modelo.Produtor;
 
@@ -51,5 +55,33 @@ public class MusicaDAO {
         }
     }
 
-    
+    public ArrayList<Musica> retriveAll() {
+
+        ArrayList<Musica> musicas = new ArrayList<Musica>();
+
+        try {
+            String sql = "SELECT titulo, letra, data_lancamento, duracao, censura, id, categoria_id FROM musica";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.execute();
+                ResultSet rst = pstm.getResultSet();
+                while (rst.next()) {
+                    int id = rst.getInt("id");
+                    String titulo = rst.getString("titulo");
+                    String letra = rst.getString("letra");
+                    Date data_lancamento = rst.getDate("data_lancamento");
+                    int duracao = rst.getInt("duracao");
+                    int censura = rst.getInt("censura");
+                    Categoria categoria = Categoria.values()[rst.getInt("categoria_id")];
+                    Musica p = new Musica(titulo, letra, id, data_lancamento, duracao, censura, categoria);
+
+                    musicas.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return musicas;
+    }
 }

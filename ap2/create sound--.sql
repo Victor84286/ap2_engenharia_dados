@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `sound`.`Musica` (
   `duracao` INT NOT NULL,
   `censura` INT NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
-  `Categoria_id` INT NOT NULL,
+  `categoria_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Musica_Categoria1`
     FOREIGN KEY (`Categoria_id`)

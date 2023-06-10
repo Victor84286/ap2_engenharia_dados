@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -7,6 +8,7 @@ public class Musica {
     private String titulo;
     private String letra;
     private LocalDate data_lancamento;
+    private Date data_lancamento2;
     private int duracao;
     private int censura;
     private int id;
@@ -43,6 +45,16 @@ public class Musica {
     public Musica(String titulo, String letra, Categoria categoria) {
         this.titulo = titulo;
         this.letra = letra;
+        this.categoria = categoria;
+    }
+
+    public Musica(String titulo, String letra, int id, Date data_lancamento2, int duracao, int censura, Categoria categoria) {
+        this.id = id;
+        this.titulo = titulo;
+        this.letra = letra;
+        this.data_lancamento2 = data_lancamento2;
+        this.duracao = duracao;
+        this.censura = censura;
         this.categoria = categoria;
     }
 
@@ -152,6 +164,6 @@ public class Musica {
 
     @Override
     public String toString() {
-        return "{'produtor':{'id': " + this.id + ", 'nome': '" + this.titulo + "}}";
+        return "{'musica':{'id': " + this.id + ", 'titulo': '" + this.titulo + ", 'letra': '" + this.letra + ", 'duracao': '" + this.duracao + ", 'censura': '" + this.censura + ", 'data de lançamento': '" + this.data_lancamento2 + ", 'nome': '" + this.titulo + ", 'nome': '" + this.titulo + "}}\n";
     }
 }

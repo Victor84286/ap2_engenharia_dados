@@ -65,7 +65,7 @@ public class AutorDAO {
     public ArrayList<Autor> retriveSpecific(String name){
         ArrayList<Autor> autors = new ArrayList<Autor>();
 		try {
-			String sql = "SELECT id, nome FROM autor WHERE nome = ?";
+			String sql = "SELECT DISTINCT nome, id FROM autor WHERE nome = ?";
 
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
@@ -87,14 +87,33 @@ public class AutorDAO {
 
     public void update(Autor autor, String name){
         try {
-			String sql = "UPDATE autor nome = ? WHERE ?.nome = ?";
+			String sql = "UPDATE autor SET nome = ? WHERE id = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, name);
-                pstm.setString(2, autor.getNome());
-                pstm.setString(3, name);
+                pstm.setInt(2, autor.getId());
 
+                pstm.execute();
+
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                        autor.setId(rst.getInt(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void delete(Autor autor){
+        try {
+			String sql = "DELETE FROM autor WHERE id = ?";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstm.setInt(1, autor.getId());
 
                 pstm.execute();
 
