@@ -17,7 +17,7 @@ public class ProdutorDAO {
         ProdutorDAO.connection = connection;
     }
 
-    public void createProdutor(Produtor produtor) {
+    public void create(Produtor produtor) {
         try {
             String sql = "INSERT INTO produtor (nome) VALUES (?)";
 
@@ -37,7 +37,7 @@ public class ProdutorDAO {
         }
     }
 
-    public ArrayList<Produtor> retriveAllProdutor() {
+    public ArrayList<Produtor> retriveAll() {
 
         ArrayList<Produtor> produtores = new ArrayList<Produtor>();
 

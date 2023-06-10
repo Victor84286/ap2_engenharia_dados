@@ -74,9 +74,9 @@ ENGINE = InnoDB;
 -- Table `sound`.`Playlist`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sound`.`Playlist` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(45) NOT NULL,
   `visibilidade` TINYINT NOT NULL,
-  `id` INT NOT NULL AUTO_INCREMENT,
   `Categoria_id` INT NOT NULL,
   `Usuario_cpf` INT NOT NULL,
   PRIMARY KEY (`id`),

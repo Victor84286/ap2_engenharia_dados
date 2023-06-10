@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import modelo.Autor;
 import modelo.Musica;
+import modelo.Produtor;
 
 public class MusicaDAO {
 
@@ -27,13 +29,20 @@ public class MusicaDAO {
                 pstm.setObject(3, musica.getDataLancamento());
                 pstm.setInt(4, musica.getDuracao());
                 pstm.setInt(5, musica.getCensura());
-                pstm.setInt(6, musica.getCategoria_id());
+                pstm.setInt(6, musica.getCategoria().valor);
 
                 pstm.execute();
-
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
                         musica.setId(rst.getInt(1));
+                        for (Autor autor : musica.getAutor()) {
+                            Autor_has_musicaDAO tdao = new Autor_has_musicaDAO(connection);
+                            tdao.create(autor, musica);
+                        }
+                        for (Produtor produtor : musica.getProdutor()) {
+                            Produtor_has_musicaDAO tdao = new Produtor_has_musicaDAO(connection);
+                            tdao.create(produtor, musica);
+                        }
                     }
                 }
             }
@@ -41,4 +50,6 @@ public class MusicaDAO {
             throw new RuntimeException(e);
         }
     }
+
+    
 }

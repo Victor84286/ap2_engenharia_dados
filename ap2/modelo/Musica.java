@@ -10,28 +10,40 @@ public class Musica {
     private int duracao;
     private int censura;
     private int id;
-    private int categoria_id;
+    private Categoria categoria;
     private ArrayList<Produtor> produtores;
     private ArrayList<Autor> autores;
+    private ArrayList<Playlist> playlists = new ArrayList<Playlist>();
 
 
 
-    public Musica(int id, String titulo, String letra, LocalDate data_lancamento, int duracao, int censura, int categoria_id){
+    public Musica(int id, String letra) {
+        this.id = id;
+        this.letra = letra;
+    }
+
+    public Musica(int id, String titulo, String letra, LocalDate data_lancamento, int duracao, int censura, Categoria categoria){
         this.id = id;
         this.titulo = titulo;
         this.letra = letra;
         this.data_lancamento = data_lancamento;
         this.duracao = duracao;
         this.censura = censura;
-        this.categoria_id = categoria_id;
+        this.categoria = categoria;
     }
-    public Musica(String titulo, String letra, LocalDate data_lancamento, int duracao, int censura, int categoria_id){
+    public Musica(String titulo, String letra, LocalDate data_lancamento, int duracao, int censura, Categoria categoria){
         this.titulo = titulo;
         this.letra = letra;
         this.data_lancamento = data_lancamento;
         this.duracao = duracao;
         this.censura = censura;
-        this.categoria_id = categoria_id;
+        this.categoria = categoria;
+    }
+
+    public Musica(String titulo, String letra, Categoria categoria) {
+        this.titulo = titulo;
+        this.letra = letra;
+        this.categoria = categoria;
     }
 
     public int getId() {
@@ -82,19 +94,19 @@ public class Musica {
         this.censura = censura;
     }
 
-    public int getCategoria_id() {
-        return categoria_id;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategoria_id(int categoria_id) {
-        this.categoria_id = categoria_id;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
-    public ArrayList<Produtor> getProdutores() {
+    public ArrayList<Produtor> getProdutor() {
         return produtores;
     }
 
-    public void setProdutores(ArrayList<Produtor> produtores) {
+    public void setProdutor(ArrayList<Produtor> produtores) {
         this.produtores = produtores;
     }
 
@@ -106,7 +118,11 @@ public class Musica {
         this.produtores.remove(produtor);
     }
 
-    public void setAutores(ArrayList<Autor> Autores) {
+    public ArrayList<Autor> getAutor() {
+        return autores;
+    }
+
+    public void setAutor(ArrayList<Autor> Autores) {
         this.autores = Autores;
     }
 
@@ -116,6 +132,22 @@ public class Musica {
 
     public void removeAutor(Autor Autor) {
         this.autores.remove(Autor);
+    }
+
+    public ArrayList<Playlist> getPlaylist() {
+        return playlists;
+    }
+
+    public void setPlaylist(ArrayList<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
+    public void addPlaylist(Playlist playlist) {
+        this.playlists.add(playlist);
+    }
+
+    public void removePlaylist(Playlist playlist) {
+        this.playlists.remove(playlist);
     }
 
     @Override
