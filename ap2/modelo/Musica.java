@@ -58,6 +58,19 @@ public class Musica {
         this.categoria = categoria;
     }
 
+    public Musica(String titulo, int id, Date data_lancamento2, int duracao, int censura, Categoria categoria) {
+        this.id = id;
+        this.titulo = titulo;
+        this.data_lancamento2 = data_lancamento2;
+        this.duracao = duracao;
+        this.censura = censura;
+        this.categoria = categoria;
+    }
+
+    public Musica(String letra) {
+        this.letra = letra;
+    }
+
     public int getId() {
         return id;
     }
@@ -165,5 +178,13 @@ public class Musica {
     @Override
     public String toString() {
         return "{'musica':{'id': " + this.id + ", 'titulo': '" + this.titulo + ", 'letra': '" + this.letra + ", 'duracao': '" + this.duracao + ", 'censura': '" + this.censura + ", 'data de lançamento': '" + this.data_lancamento2 + ", 'nome': '" + this.titulo + ", 'nome': '" + this.titulo + "}}\n";
+    }
+
+    public String visualizarUma() {
+        return "{'musica':{'id': " + this.id + ", 'titulo': '" + this.titulo + ", 'duracao': '" + this.duracao + ", 'censura': '" + this.censura + ", 'data de lançamento': '" + this.data_lancamento2 + ", 'nome': '" + this.titulo + ", 'nome': '" + this.titulo + "}}\n";
+    }
+
+    public String escutar() {
+        return "{'letra':{"+ this.letra +"}}\n";
     }
 }

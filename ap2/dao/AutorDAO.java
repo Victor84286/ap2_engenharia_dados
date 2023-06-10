@@ -65,7 +65,7 @@ public class AutorDAO {
     public ArrayList<Autor> retriveSpecific(String name){
         ArrayList<Autor> autors = new ArrayList<Autor>();
 		try {
-			String sql = "SELECT DISTINCT nome, id FROM autor WHERE nome = ?";
+			String sql = "SELECT nome, id FROM autor WHERE nome = ?";
 
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {

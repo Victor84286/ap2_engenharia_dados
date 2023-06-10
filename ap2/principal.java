@@ -21,6 +21,6 @@ public class principal {
         ProdutorDAO produtorDAO = new ProdutorDAO(connection);
         MusicaDAO musDAO = new MusicaDAO(connection);
 
-        
+        System.out.println(musDAO.visualizarUma("cu"));
     }
 }
