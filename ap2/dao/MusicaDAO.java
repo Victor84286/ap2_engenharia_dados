@@ -208,20 +208,19 @@ public class MusicaDAO {
         return musicas;
     }
 
-    public void updateTitulo(Musica musica, String titulo){
+    public void updateTitulo(String musica, String titulo){
         try {
-			String sql = "UPDATE musica SET titulo = ? WHERE id = ?";
+			String sql = "UPDATE musica SET titulo = ? WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, titulo);
-                pstm.setInt(2, musica.getId());
+                pstm.setString(2, musica);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        musica.setId(rst.getInt(1));
                     }
                 }
             }
@@ -230,20 +229,19 @@ public class MusicaDAO {
         }
     }
 
-    public void updateDate(Musica musica, LocalDate data){
+    public void updateDate(String musica, LocalDate data){
         try {
-			String sql = "UPDATE musica SET data_lancaento = ? WHERE id = ?";
+			String sql = "UPDATE musica SET data_lancaento = ? WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setObject(1, data);
-                pstm.setInt(2, musica.getId());
+                pstm.setString(2, musica);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        musica.setId(rst.getInt(1));
                     }
                 }
             }
@@ -252,20 +250,99 @@ public class MusicaDAO {
         }
     }
 
-    public void updateLetra(Musica musica, String letra){
+    public void updateLetra(String musica, String letra){
         try {
-			String sql = "UPDATE musica SET letra = ? WHERE id = ?";
+			String sql = "UPDATE musica SET letra = ? WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, letra);
-                pstm.setInt(2, musica.getId());
+                pstm.setString(2, musica);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        musica.setId(rst.getInt(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateDuracao(String musica, int duracao){
+        try {
+			String sql = "UPDATE musica SET duracao = ? WHERE nome = ?";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstm.setInt(1, duracao);
+                pstm.setString(2, musica);
+
+                pstm.execute();
+
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateCensura(String musica, int censura){
+        try {
+			String sql = "UPDATE musica SET censura = ? WHERE nome = ?";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstm.setInt(1, censura);
+                pstm.setString(2, musica);
+
+                pstm.execute();
+
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateCategoria(String nome, Categoria categoria){
+        try {
+			String sql = "UPDATE musica SET categoria = ? WHERE nome = ?";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstm.setInt(1, categoria.valor);
+                pstm.setString(2, nome);
+
+                pstm.execute();
+
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void delete(String nome){
+        try {
+			String sql = "DELETE FROM musica WHERE nome = ?";
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                pstm.setString(1, nome);
+                
+                pstm.execute();
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
                     }
                 }
             }
