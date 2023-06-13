@@ -4,6 +4,7 @@ public class Produtor {
 
     private String nome;
     private int id;
+    
 
     public Produtor(int id, String nome){
         this.id = id;

@@ -78,16 +78,16 @@ CREATE TABLE IF NOT EXISTS `sound`.`Playlist` (
   `titulo` VARCHAR(45) NOT NULL,
   `data_criacao` DATE NOT NULL,
   `visibilidade` TINYINT NOT NULL,
-  `Categoria_id` INT NOT NULL,
-  `Usuario_cpf` INT NOT NULL,
+  `categoria_id` INT NOT NULL,
+  `usuario_cpf` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Playlist_Categoria1`
-    FOREIGN KEY (`Categoria_id`)
+    FOREIGN KEY (`categoria_id`)
     REFERENCES `sound`.`Categoria` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Playlist_Usuario1`
-    FOREIGN KEY (`Usuario_cpf`)
+    FOREIGN KEY (`usuario_cpf`)
     REFERENCES `sound`.`Usuario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)

@@ -42,12 +42,44 @@ public class MusicaDAO {
                     while (rst.next()) {
                         musica.setId(rst.getInt(1));
                         for (Autor autor : musica.getAutor()) {
-                            Autor_has_musicaDAO tdao = new Autor_has_musicaDAO(connection);
-                            tdao.create(autor, musica);
+                            try {
+                            String sql2 = "INSERT INTO autor_has_musica (autor_id, musica_id) VALUES (?, ?)";
+
+                            try (PreparedStatement pstm2 = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)) {
+
+                                pstm2.setInt(1, autor.getId());
+                                pstm2.setInt(2, musica.getId());
+                                pstm2.execute();
+
+                                try (ResultSet rst2 = pstm2.getGeneratedKeys()) {
+                                    while (rst2.next()) {
+                                        autor.setId(rst2.getInt(1));
+                                    }
+                                }
+                            }
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                         }
                         for (Produtor produtor : musica.getProdutor()) {
-                            Produtor_has_musicaDAO tdao = new Produtor_has_musicaDAO(connection);
-                            tdao.create(produtor, musica);
+                            try {
+                                String sql2 = "INSERT INTO produtor_has_musica (produtor_id, musica_id) VALUES (?, ?)";
+
+                                try (PreparedStatement pstm2 = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)) {
+
+                                    pstm2.setInt(1, produtor.getId());
+                                    pstm2.setInt(2, musica.getId());
+                                    pstm2.execute();
+
+                                    try (ResultSet rst2 = pstm2.getGeneratedKeys()) {
+                                        while (rst2.next()) {
+                                            produtor.setId(rst2.getInt(1));
+                                        }
+                                    }
+                                }
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 }
