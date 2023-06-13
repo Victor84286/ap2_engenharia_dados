@@ -208,6 +208,9 @@ public class MusicaDAO {
         return musicas;
     }
 
+    // updates ===============
+    // update titulo
+
     public void updateTitulo(String musica, String titulo){
         try {
 			String sql = "UPDATE musica SET titulo = ? WHERE nome = ?";
@@ -229,9 +232,11 @@ public class MusicaDAO {
         }
     }
 
+    // update data_lancamento
+
     public void updateDate(String musica, LocalDate data){
         try {
-			String sql = "UPDATE musica SET data_lancaento = ? WHERE nome = ?";
+			String sql = "UPDATE musica SET data_lancamento = ? WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -249,6 +254,8 @@ public class MusicaDAO {
             throw new RuntimeException(e);
         }
     }
+
+    // update letra
 
     public void updateLetra(String musica, String letra){
         try {
@@ -271,6 +278,8 @@ public class MusicaDAO {
         }
     }
 
+    // update duracao
+
     public void updateDuracao(String musica, int duracao){
         try {
 			String sql = "UPDATE musica SET duracao = ? WHERE nome = ?";
@@ -291,6 +300,8 @@ public class MusicaDAO {
             throw new RuntimeException(e);
         }
     }
+
+    // update censura
 
     public void updateCensura(String musica, int censura){
         try {
@@ -313,6 +324,8 @@ public class MusicaDAO {
         }
     }
 
+    // update categoria
+
     public void updateCategoria(String nome, Categoria categoria){
         try {
 			String sql = "UPDATE musica SET categoria = ? WHERE nome = ?";
@@ -334,12 +347,14 @@ public class MusicaDAO {
         }
     }
 
+    // deleta a partir do titulo
+
     public void delete(String nome){
         try {
 			String sql = "DELETE FROM musica WHERE nome = ?";
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 pstm.setString(1, nome);
-                
+
                 pstm.execute();
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
