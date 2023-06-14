@@ -106,19 +106,18 @@ public class AutorDAO {
         }
     }
 
-    public void delete(Autor autor){
+    public void delete(String autor){
         try {
-			String sql = "DELETE FROM autor WHERE id = ?";
+			String sql = "DELETE FROM autor WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-                pstm.setInt(1, autor.getId());
+                pstm.setString(1, autor);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        autor.setId(rst.getInt(1));
                     }
                 }
             }
