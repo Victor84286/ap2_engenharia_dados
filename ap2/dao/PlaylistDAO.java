@@ -5,13 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 import modelo.Categoria;
 import modelo.Musica;
 import modelo.Playlist;
-import modelo.Usuario;
 
 public class PlaylistDAO {
 
@@ -20,6 +19,8 @@ public class PlaylistDAO {
     public PlaylistDAO(Connection connection) {
         this.connection = connection;
     }
+
+    // criar playlist
 
     public void create(Playlist playlist) {
         try {
@@ -37,67 +38,150 @@ public class PlaylistDAO {
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        playlist.setId(rst.getInt(3));
+                        playlist.setId(rst.getInt(1));
                         for (Musica musica : playlist.getMusicas()) {
-                            MusicaDAO mdao = new MusicaDAO(connection);
+                            try {
+                            String sql2 = "INSERT INTO musica_has_playlist (playlist_id, musica_id) VALUES (?, ?)";
+
+                            try (PreparedStatement pstm2 = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)) {
+                                pstm2.setInt(1, playlist.getId());
+                                pstm2.setInt(2, musica.getId());
+                                pstm2.execute();
+
+                                try (ResultSet rst2 = pstm2.getGeneratedKeys()) {
+                                    while (rst2.next()) {
+                                        musica.setId(rst2.getInt(1));
+                                    }
+                                }
+                            }
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 }
             }
-        } catch (SQLException e) {
+      } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-    public ArrayList<Playlist> retrivePlaylist(){
+    // ouvir playlist
 
-        ArrayList<Playlist> playlist = new ArrayList<Playlist>();
-        Playlist ultima = null;
-        try {
+    public ArrayList<Musica> ouvirPlaylist(String nome){
 
-            String sql = "SELECT p.id, p.nome, p.cpf, p.data_nascimento, p.idade, t.id, t.tipo, t.codigo_pais, t.codigo_area, t.numero "
-                    + "FROM pessoa AS p "
-                    + "INNER JOIN telefone AS t ON p.id = t.fk_pessoa";
+        ArrayList<Musica> playlist = new ArrayList<Musica>();
+
+		try {
+			String sql = "SELECT m.titulo, m.letra"
+                        + "FROM musica as m"
+                        + "INNER JOIN musica_has_playlist AS m_p ON m_p.m_id = m.id"
+                        + "INNER JOIN playlist AS p ON m_p.playlist_id = p.id"
+                        + " WHERE p.titulo = ?";
 
 
-            try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-                pstm.execute();
-
-                try (ResultSet rst = pstm.getResultSet()) {
-                    while (rst.next()) {
-                        if (ultima == null || ultima.getId() != rst.getInt(3)) {
-                            String p_titulo = rst.getString("categoria_id");
-                            int visibilidade = rst.getInt("categoria_id");
-                            int p_id = rst.getInt("categoria_id");
-                            Categoria categoria_id = Categoria.values()[rst.getInt("categoria_id")]
-                            Usuario usuario_cpf = rst.getObject(5, Usuario.class);
-                            Playlist play = new Playlist(titulo, visibilidade, id, categoria_id, usuario_cpf);
-                            playlist.add(play);
-                            ultima = play;
-                        }
-
-                        String m_titulo = rst.getString("categoria_id");
-                        String letra = rst.getString(7);
-                        LocalDate data_lancamento = LocalDate.values()[rst.getObject(8)];
-                        int duracao = rst.getInt(9);
-                        int censura = rst.getInt(10);
-                        int m_id = rst.getInt(11);
-                        Categoria m_categoria = Categoria.values()[rst.getInt(12)];
-                        Musica mus = new Musica(m_titulo, letra, data_lancamento, duracao, censura, m_id, m_categoria);
-                        ultima.addMusica(mus);
-                    }
+			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.setString(1, nome);
+				pstm.execute();
+                ResultSet rst = pstm.getResultSet();
+                while(rst.next()){
+                    String titulo = rst.getString("titulo");
+                    String letra = rst.getString("letra");
+                    Musica musica = new Musica(titulo, letra);
+                    playlist.add(musica);
                 }
-                return playlist;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+        return playlist;
     }
 
+    // buscar playlist pelo titulo
+
+    public Playlist buscarPlaylistTitulo(String name){
+		try {
+			String sql = "SELECT id, titulo, data_criacao, visibilidade, categoria_id, usuario_cpf FROM playlist WHERE titulo = ?";
+
+
+			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.setString(1, name);
+				pstm.execute();
+                ResultSet rst = pstm.getResultSet();
+                while(rst.next()){
+                    int id = rst.getInt("id");
+                    String titulo = rst.getString("titulo");
+                    Date data_criacao = rst.getDate("data_lancamento");
+                    int visibilidade = rst.getInt("visibilidade");
+                    Categoria categoria = Categoria.values()[rst.getInt("categoria_id")];
+                    int usuario = rst.getInt("usuario_cpf");
+                    Playlist play = new Playlist(id, titulo, data_criacao, visibilidade, categoria, usuario);
+                    return play;
+                }
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+        Playlist play = new Playlist();
+        return play;
+    }
+
+    // buscar playlists de um usuario
+
+    public ArrayList<Playlist> mostrarPlaylists(int identificador){
+
+        ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+
+		try {
+			String sql = "SELECT playlist.titulo from playlist where usuario_cpf = ?";
+
+			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.setInt(1, identificador);
+				pstm.execute();
+                ResultSet rst = pstm.getResultSet();
+                while(rst.next()){
+                    String titulo = rst.getString("titulo");
+                    Playlist playlist = new Playlist(titulo);
+                    playlists.add(playlist);
+                }
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+        return playlists;
+    }
+
+    // buscar playlists criadas em um ano
+
+    public ArrayList<Playlist> buscarPlaylistsAno(int ano){
+
+        ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+
+		try {
+			String sql = "SELECT playlist.titulo from playlist where year(data_criacao) = ?";
+
+			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.setInt(1, ano);
+				pstm.execute();
+                ResultSet rst = pstm.getResultSet();
+                while(rst.next()){
+                    String titulo = rst.getString("titulo");
+                    Playlist playlist = new Playlist(titulo);
+                    playlists.add(playlist);
+                }
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+        return playlists;
+    }
+
+    // updates
 
     public void updateTitulo(String playlist, String titulo){
         try {
-			String sql = "UPDATE playlist SET titulo = ? WHERE id = ?";
+			String sql = "UPDATE playlist SET titulo = ? WHERE titulo = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -118,7 +202,7 @@ public class PlaylistDAO {
 
     public void updateVisibilidade(String playlist, int visibilidade){
         try {
-			String sql = "UPDATE playlist SET visibilidade = ? WHERE id = ?";
+			String sql = "UPDATE playlist SET visibilidade = ? WHERE titulo = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -137,11 +221,13 @@ public class PlaylistDAO {
         }
     }
 
+    // delete
+
     public void delete(int id){
         try {
 			String sql = "DELETE FROM playlist WHERE id = ?";
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                pstm.setString(1, id);
+                pstm.setInt(1, id);
 
                 pstm.execute();
                 try (ResultSet rst = pstm.getGeneratedKeys()) {

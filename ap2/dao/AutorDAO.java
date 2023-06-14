@@ -85,20 +85,19 @@ public class AutorDAO {
         return autors;
     }
 
-    public void update(Autor autor, String name){
+    public void update(String nome, String name){
         try {
 			String sql = "UPDATE autor SET nome = ? WHERE id = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, name);
-                pstm.setInt(2, autor.getId());
+                pstm.setString(2, nome);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        autor.setId(rst.getInt(1));
                     }
                 }
             }

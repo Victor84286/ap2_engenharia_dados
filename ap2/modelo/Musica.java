@@ -71,6 +71,11 @@ public class Musica {
         this.letra = letra;
     }
 
+    public Musica(String titulo, String letra) {
+        this.titulo = titulo;
+        this.letra = letra;
+    }
+
     public int getId() {
         return id;
     }
