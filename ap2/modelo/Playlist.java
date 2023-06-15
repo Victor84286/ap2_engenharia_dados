@@ -49,6 +49,14 @@ public class Playlist {
         this.titulo = titulo;
     }
 
+    public Playlist(String titulo, int visibilidade, LocalDate data_criacao, Categoria categoria, Usuario usuario) {
+        this.titulo = titulo;
+        this.visibilidade = visibilidade;
+        this.data_criacao = data_criacao;
+        this.categoria = categoria;
+        this.usuario = usuario;
+    }
+
     public Playlist() {
     }
 

@@ -189,7 +189,7 @@ public class Musica {
         return "{'musica':{'id': " + this.id + ", 'titulo': '" + this.titulo + ", 'duracao': '" + this.duracao + ", 'censura': '" + this.censura + ", 'data de lançamento': '" + this.data_lancamento2 + ", 'nome': '" + this.titulo + ", 'nome': '" + this.titulo + "}}\n";
     }
 
-    public String escutar() {
+    public String escutar(String letra2) {
         return "{'letra':{"+ this.letra +"}}\n";
     }
 }

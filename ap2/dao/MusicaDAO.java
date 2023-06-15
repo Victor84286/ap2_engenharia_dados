@@ -165,7 +165,7 @@ public class MusicaDAO {
                 while(rst.next()){
                     String letra = rst.getString("letra");
                     Musica m = new Musica(letra);
-                    musica = m.escutar();
+                    musica = m.escutar(letra);
                 }
 			}
 		} catch (SQLException e) {

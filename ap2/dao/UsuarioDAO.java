@@ -34,7 +34,7 @@ public class UsuarioDAO {
         }
     }
 
-    public Usuario retrive(int cpf){
+    public Usuario retriveSpecific(int cpf){
 
 		Usuario usu = new Usuario(null, cpf, null, cpf);
 
@@ -61,5 +61,45 @@ public class UsuarioDAO {
         return usu;
     }
 
+// updates
 
+    public void updateCartao(int numero, int identificador){
+        try {
+			String sql = "UPDATE usuario SET numero_cartao = ? WHERE cpf = ?";
+
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstm.setInt(1, numero);
+                pstm.setInt(2, identificador);
+
+                pstm.execute();
+
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // delete
+
+    public void delete(int identificador){
+        try {
+			String sql = "DELETE FROM usuario WHERE cpf = ?";
+            try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                pstm.setInt(1, identificador);
+
+                pstm.execute();
+                try (ResultSet rst = pstm.getGeneratedKeys()) {
+                    while (rst.next()) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

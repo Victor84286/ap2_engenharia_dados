@@ -1,9 +1,12 @@
 package modelo;
 
+import java.util.ArrayList;
+
 public class Autor {
 
     private int id;
     private String nome;
+    private ArrayList<Musica> musicas = new ArrayList<Musica>();
 
     public Autor(int id, String nome) {
         this.id = id;
@@ -31,6 +34,22 @@ public class Autor {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public ArrayList<Musica> getMusicas() {
+        return musicas;
+    }
+
+    public void setMusicas(ArrayList<Musica> musicas) {
+        this.musicas = musicas;
+    }
+
+    public void addMusicas(Musica musicas) {
+        this.musicas.add(musicas);
+    }
+
+    public void removeMusicas(Musica musicas) {
+        this.musicas.remove(musicas);
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.Date;
 import modelo.Categoria;
 import modelo.Musica;
 import modelo.Playlist;
+import modelo.Usuario;
 
 public class PlaylistDAO {
 
@@ -69,20 +70,17 @@ public class PlaylistDAO {
 
     // ouvir playlist
 
-    public ArrayList<Musica> ouvirPlaylist(String nome){
+    public ArrayList<Musica> ouvirPlaylist(String nome, Usuario usuario){
 
         ArrayList<Musica> playlist = new ArrayList<Musica>();
 
 		try {
-			String sql = "SELECT m.titulo, m.letra"
-                        + "FROM musica as m"
-                        + "INNER JOIN musica_has_playlist AS m_p ON m_p.m_id = m.id"
-                        + "INNER JOIN playlist AS p ON m_p.playlist_id = p.id"
-                        + " WHERE p.titulo = ?";
+			String sql = "SELECT m.titulo, m.letra FROM musica as m INNER JOIN musica_has_playlist AS m_p ON m_p.m_id = m.id INNER JOIN playlist AS p ON m_p.playlist_id = p.id WHERE p.titulo = ? and (visibilidade = 1 or (visibilidade = 0 and usuario_cpf = ?))";
 
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
                 pstm.setString(1, nome);
+                pstm.setInt(2, usuario.getCpf());
 				pstm.execute();
                 ResultSet rst = pstm.getResultSet();
                 while(rst.next()){
@@ -100,13 +98,14 @@ public class PlaylistDAO {
 
     // buscar playlist pelo titulo
 
-    public Playlist buscarPlaylistTitulo(String name){
+    public Playlist buscarPlaylistTitulo(String name, Usuario usuario){
 		try {
-			String sql = "SELECT id, titulo, data_criacao, visibilidade, categoria_id, usuario_cpf FROM playlist WHERE titulo = ?";
+			String sql = "SELECT id, titulo, data_criacao, visibilidade, categoria_id, usuario_cpf FROM playlist WHERE titulo = ? and (visibilidade = 1 or (visibilidade = 0 and usuario_cpf = ?))";
 
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
                 pstm.setString(1, name);
+                pstm.setInt(2, usuario.getCpf());
 				pstm.execute();
                 ResultSet rst = pstm.getResultSet();
                 while(rst.next()){
@@ -115,8 +114,8 @@ public class PlaylistDAO {
                     Date data_criacao = rst.getDate("data_lancamento");
                     int visibilidade = rst.getInt("visibilidade");
                     Categoria categoria = Categoria.values()[rst.getInt("categoria_id")];
-                    int usuario = rst.getInt("usuario_cpf");
-                    Playlist play = new Playlist(id, titulo, data_criacao, visibilidade, categoria, usuario);
+                    int usuario_cpf = rst.getInt("usuario_cpf");
+                    Playlist play = new Playlist(id, titulo, data_criacao, visibilidade, categoria, usuario_cpf);
                     return play;
                 }
 			}
@@ -129,15 +128,16 @@ public class PlaylistDAO {
 
     // buscar playlists de um usuario
 
-    public ArrayList<Playlist> mostrarPlaylists(int identificador){
+    public ArrayList<Playlist> buscarPlaylistsUsuario(int buscar, Usuario usuario){
 
         ArrayList<Playlist> playlists = new ArrayList<Playlist>();
 
 		try {
-			String sql = "SELECT playlist.titulo from playlist where usuario_cpf = ?";
+			String sql = "SELECT playlist.titulo from playlist where usuario_cpf = ? and (visibilidade = 1 or (visibilidade = 0 and usuario_cpf = ?))";
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-                pstm.setInt(1, identificador);
+                pstm.setInt(1, buscar);
+                pstm.setInt(2, usuario.getCpf());
 				pstm.execute();
                 ResultSet rst = pstm.getResultSet();
                 while(rst.next()){
@@ -154,15 +154,16 @@ public class PlaylistDAO {
 
     // buscar playlists criadas em um ano
 
-    public ArrayList<Playlist> buscarPlaylistsAno(int ano){
+    public ArrayList<Playlist> buscarPlaylistsAno(int ano, Usuario usuario){
 
         ArrayList<Playlist> playlists = new ArrayList<Playlist>();
 
 		try {
-			String sql = "SELECT playlist.titulo from playlist where year(data_criacao) = ?";
+			String sql = "SELECT playlist.titulo from playlist where year(data_criacao) = ? and (visibilidade = 1 or (visibilidade = 0 and usuario_cpf = ?))";
 
 			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
                 pstm.setInt(1, ano);
+                pstm.setInt(2, usuario.getCpf());
 				pstm.execute();
                 ResultSet rst = pstm.getResultSet();
                 while(rst.next()){
@@ -179,14 +180,15 @@ public class PlaylistDAO {
 
     // updates
 
-    public void updateTitulo(String playlist, String titulo){
+    public void updateTitulo(String playlist, String titulo, Usuario usuario){
         try {
-			String sql = "UPDATE playlist SET titulo = ? WHERE titulo = ?";
+			String sql = "UPDATE playlist SET titulo = ? WHERE titulo = ? and usuario_cpf = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, titulo);
                 pstm.setString(2, playlist);
+                pstm.setInt(3, usuario.getCpf());
 
                 pstm.execute();
 
@@ -200,14 +202,15 @@ public class PlaylistDAO {
         }
     }
 
-    public void updateVisibilidade(String playlist, int visibilidade){
+    public void updateVisibilidade(String playlist, int visibilidade, Usuario usuario){
         try {
-			String sql = "UPDATE playlist SET visibilidade = ? WHERE titulo = ?";
+			String sql = "UPDATE playlist SET visibilidade = ? WHERE titulo = ? and usuario_cpf = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setObject(1, visibilidade);
                 pstm.setString(2, playlist);
+                pstm.setInt(3, usuario.getCpf());
 
                 pstm.execute();
 
@@ -223,11 +226,12 @@ public class PlaylistDAO {
 
     // delete
 
-    public void delete(int id){
+    public void delete(int id, Usuario usuario){
         try {
-			String sql = "DELETE FROM playlist WHERE id = ?";
+			String sql = "DELETE FROM playlist WHERE id = ? and usuario_cpf = ?";
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 pstm.setInt(1, id);
+                pstm.setInt(2, usuario.getCpf());
 
                 pstm.execute();
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
