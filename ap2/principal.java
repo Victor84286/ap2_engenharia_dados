@@ -166,6 +166,7 @@ public class Principal {
                     System.out.println("Fazer login como qual usuario?\n(Escreva o cpf)");
                     int cpf = sc2.nextInt();
                     Usuario usuario = usuDAO.retriveSpecific(cpf);
+                    while(true){
                     System.out.println("Escreva o que deseja fazer\n(Criar um playlist, digite 1)\n(Buscar um playlist, digite 3)\n(Fazer update em um playlist, digite 4)\n(Deletar um playlist, digite 5)");
                     escolha = sc2.nextInt();
                     switch (escolha) {
@@ -193,6 +194,7 @@ public class Principal {
                             break;
                     }
                     break;
+                }
             }
         }
     }
