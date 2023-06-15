@@ -84,20 +84,19 @@ public class ProdutorDAO {
         return produtores;
     }
 
-    public void update(Produtor produtor, String name){
+    public void update(String produtor, String name){
         try {
-			String sql = "UPDATE produtor SET nome = ? WHERE id = ?";
+			String sql = "UPDATE produtor SET nome = ? WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
                 pstm.setString(1, name);
-                pstm.setInt(2, produtor.getId());
+                pstm.setString(2, produtor);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        produtor.setId(rst.getInt(1));
                     }
                 }
             }
@@ -106,19 +105,18 @@ public class ProdutorDAO {
         }
     }
 
-    public void delete(Produtor produtor){
+    public void delete(String produtor){
         try {
-			String sql = "DELETE FROM produtor WHERE id = ?";
+			String sql = "DELETE FROM produtor WHERE nome = ?";
 
             try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-                pstm.setInt(1, produtor.getId());
+                pstm.setString(1, produtor);
 
                 pstm.execute();
 
                 try (ResultSet rst = pstm.getGeneratedKeys()) {
                     while (rst.next()) {
-                        produtor.setId(rst.getInt(1));
                     }
                 }
             }
